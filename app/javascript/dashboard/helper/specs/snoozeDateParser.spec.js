@@ -939,6 +939,28 @@ describe('bare number + time-of-day context inference', () => {
     expect(result.date.getHours()).toBe(21);
   });
 
+  it('"tonight 12" parses to midnight, not noon', () => {
+    const result = parseDateFromText('tonight 12', now);
+    expect(result).not.toBeNull();
+    expect(result.date.getDate()).toBe(17);
+    expect(result.date.getHours()).toBe(0);
+  });
+
+  it('"night 12:30" parses to 12:30am, not 12:30pm', () => {
+    const result = parseDateFromText('night 12:30', now);
+    expect(result).not.toBeNull();
+    expect(result.date.getDate()).toBe(17);
+    expect(result.date.getHours()).toBe(0);
+    expect(result.date.getMinutes()).toBe(30);
+  });
+
+  it('"afternoon 12" still parses to noon', () => {
+    const result = parseDateFromText('afternoon 12', now);
+    expect(result).not.toBeNull();
+    expect(result.date.getDate()).toBe(16);
+    expect(result.date.getHours()).toBe(12);
+  });
+
   it('"tomorrow morning 6" parses to tomorrow 6am', () => {
     const result = parseDateFromText('tomorrow morning 6', now);
     expect(result).not.toBeNull();
